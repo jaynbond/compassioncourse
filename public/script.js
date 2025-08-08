@@ -516,7 +516,7 @@ if ('performance' in window) {
     });
 }
 
-// Animated text functionality with sliding effects
+// Animated text functionality with creative exit animations
 function initAnimatedText() {
     const animatedTextElement = document.getElementById('animatedText');
     if (!animatedTextElement) return;
@@ -527,6 +527,16 @@ function initAnimatedText() {
         'Create meaningful dialogue',
         'Live in alignment with your values',
         'Join a global compassion community'
+    ];
+    
+    const exitAnimations = [
+        'slide-left-out',
+        'slide-right-out', 
+        'dissolve-out',
+        'fly-up-out',
+        'zoom-out',
+        'spiral-out',
+        'bounce-out'
     ];
     
     let currentIndex = 0;
@@ -540,29 +550,34 @@ function initAnimatedText() {
         if (isAnimating) return;
         isAnimating = true;
         
+        // Choose alternating entrance and random exit animations
         const isEven = currentIndex % 2 === 0;
-        const outClass = isEven ? 'slide-left-out' : 'slide-right-out';
         const inClass = isEven ? 'slide-right-in' : 'slide-left-in';
+        const outClass = exitAnimations[currentIndex % exitAnimations.length];
         
-        // Slide current text out
+        // Apply exit animation
         animatedTextElement.className = `animated-text-content ${outClass}`;
+        
+        // Wait for exit animation to complete (varies by animation)
+        const exitDelay = outClass.includes('spiral') || outClass.includes('dissolve') ? 1500 : 
+                         outClass.includes('fly-up') || outClass.includes('bounce') ? 1200 : 1000;
         
         setTimeout(() => {
             // Update to next message
             currentIndex = (currentIndex + 1) % messages.length;
             animatedTextElement.textContent = messages[currentIndex];
             
-            // Slide new text in from opposite side
+            // Slide new text in from alternating side
             animatedTextElement.className = `animated-text-content ${inClass}`;
             
             setTimeout(() => {
                 isAnimating = false;
             }, 1000);
-        }, 1000);
+        }, exitDelay);
     }
     
-    // Change text every 3 seconds
-    setInterval(slideToNext, 3000);
+    // Change text every 6 seconds (twice as long pause in middle)
+    setInterval(slideToNext, 6000);
 }
 
 // Hero background functionality
