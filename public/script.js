@@ -516,7 +516,7 @@ if ('performance' in window) {
     });
 }
 
-// Animated text functionality
+// Animated text functionality with sliding effects
 function initAnimatedText() {
     const animatedTextElement = document.getElementById('animatedText');
     if (!animatedTextElement) return;
@@ -530,14 +530,39 @@ function initAnimatedText() {
     ];
     
     let currentIndex = 0;
+    let isAnimating = false;
     
-    function updateText() {
-        animatedTextElement.textContent = messages[currentIndex];
-        currentIndex = (currentIndex + 1) % messages.length;
+    // Set initial text
+    animatedTextElement.textContent = messages[currentIndex];
+    animatedTextElement.className = 'animated-text-content slide-right-in';
+    
+    function slideToNext() {
+        if (isAnimating) return;
+        isAnimating = true;
+        
+        const isEven = currentIndex % 2 === 0;
+        const outClass = isEven ? 'slide-left-out' : 'slide-right-out';
+        const inClass = isEven ? 'slide-right-in' : 'slide-left-in';
+        
+        // Slide current text out
+        animatedTextElement.className = `animated-text-content ${outClass}`;
+        
+        setTimeout(() => {
+            // Update to next message
+            currentIndex = (currentIndex + 1) % messages.length;
+            animatedTextElement.textContent = messages[currentIndex];
+            
+            // Slide new text in from opposite side
+            animatedTextElement.className = `animated-text-content ${inClass}`;
+            
+            setTimeout(() => {
+                isAnimating = false;
+            }, 1000);
+        }, 1000);
     }
     
-    // Update text every 2 seconds
-    setInterval(updateText, 2000);
+    // Change text every 3 seconds
+    setInterval(slideToNext, 3000);
 }
 
 // Hero background functionality
