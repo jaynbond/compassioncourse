@@ -198,7 +198,7 @@ p {
 .hero {
     background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%) !important;
     color: white;
-    padding: 120px 0 80px;
+    padding: 90px 0 80px;
     margin-top: 80px;
     min-height: 100vh;
     display: flex;
