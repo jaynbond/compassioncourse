@@ -516,10 +516,11 @@ if ('performance' in window) {
     });
 }
 
-// Animated text functionality with creative exit animations
+// Animated text functionality with overlapping animations
 function initAnimatedText() {
-    const animatedTextElement = document.getElementById('animatedText');
-    if (!animatedTextElement) return;
+    const textElement1 = document.getElementById('animatedText1');
+    const textElement2 = document.getElementById('animatedText2');
+    if (!textElement1 || !textElement2) return;
     
     const messages = [
         'Build lasting empathy practices',
@@ -539,45 +540,49 @@ function initAnimatedText() {
         'bounce-out'
     ];
     
+    const enterAnimations = [
+        'slide-left-in',
+        'slide-right-in',
+        'slide-top-in',
+        'slide-bottom-in',
+        'slide-diagonal-in',
+        'fade-scale-in'
+    ];
+    
     let currentIndex = 0;
-    let isAnimating = false;
+    let activeElement = textElement1;
+    let inactiveElement = textElement2;
     
     // Set initial text
-    animatedTextElement.textContent = messages[currentIndex];
-    animatedTextElement.className = 'animated-text-content slide-right-in';
+    textElement1.textContent = messages[currentIndex];
+    textElement1.className = 'animated-text-content slide-right-in';
     
     function slideToNext() {
-        if (isAnimating) return;
-        isAnimating = true;
+        const nextIndex = (currentIndex + 1) % messages.length;
+        const exitClass = exitAnimations[currentIndex % exitAnimations.length];
+        const enterClass = enterAnimations[nextIndex % enterAnimations.length];
         
-        // Choose alternating entrance and random exit animations
-        const isEven = currentIndex % 2 === 0;
-        const inClass = isEven ? 'slide-right-in' : 'slide-left-in';
-        const outClass = exitAnimations[currentIndex % exitAnimations.length];
+        // Start exit animation on active element
+        activeElement.className = `animated-text-content ${exitClass}`;
         
-        // Apply exit animation
-        animatedTextElement.className = `animated-text-content ${outClass}`;
-        
-        // Wait for exit animation to complete (varies by animation)
-        const exitDelay = outClass.includes('spiral') || outClass.includes('dissolve') ? 1500 : 
-                         outClass.includes('fly-up') || outClass.includes('bounce') ? 1200 : 1000;
-        
+        // Start enter animation on inactive element after a short delay (overlap)
         setTimeout(() => {
-            // Update to next message
-            currentIndex = (currentIndex + 1) % messages.length;
-            animatedTextElement.textContent = messages[currentIndex];
+            inactiveElement.textContent = messages[nextIndex];
+            inactiveElement.className = `animated-text-content ${enterClass}`;
             
-            // Slide new text in from alternating side
-            animatedTextElement.className = `animated-text-content ${inClass}`;
+            // Swap active/inactive elements
+            const temp = activeElement;
+            activeElement = inactiveElement;
+            inactiveElement = temp;
             
-            setTimeout(() => {
-                isAnimating = false;
-            }, 1000);
-        }, exitDelay);
+            currentIndex = nextIndex;
+        }, 500); // 500ms overlap - new text starts before old one finishes
     }
     
-    // Change text every 6 seconds (twice as long pause in middle)
-    setInterval(slideToNext, 6000);
+    // Start the animation cycle after initial display
+    setTimeout(() => {
+        setInterval(slideToNext, 4000); // 4 seconds total cycle
+    }, 3000); // Wait 3 seconds before starting cycle
 }
 
 // Hero background functionality
