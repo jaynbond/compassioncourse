@@ -617,6 +617,7 @@ function initHeroBackground() {
 function initTeamPhotoGrid() {
     // List of team photos with real names
     const teamPhotos = [
+        'Thom Bond.png',
         'Adam Kusio.png',
         'Agnes Kowalski.png',
         'Angelica Maeireizo Tokeshi.png',
@@ -635,7 +636,6 @@ function initTeamPhotoGrid() {
         'Sabine Bends.png',
         'Sara Nuytemans.png',
         'Shahinaz El Hennawi.png',
-        'Thom Bond.png',
         'Yasmine Arafa.png',
         // Additional placeholders to fill 5x6 grid (30 total)
         'team-member-21.png',
