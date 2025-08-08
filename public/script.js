@@ -11,6 +11,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize hero background
     initHeroBackground();
     
+    // Initialize team photo grid
+    initTeamPhotoGrid();
+    
     // Mobile Navigation
     const hamburger = document.querySelector('.hamburger');
     const navMenu = document.querySelector('.nav-menu');
@@ -607,5 +610,94 @@ function initHeroBackground() {
         if (!heroSection.classList.contains('with-bg')) {
             heroSection.classList.add('with-bg');
         }
+    }, 2000);
+}
+
+// Team Photo Grid for Main Page
+function initTeamPhotoGrid() {
+    // List of team photos
+    const teamPhotos = [
+        'Screenshot 2025-08-08 at 3.21.45 PM.png',
+        'Screenshot 2025-08-08 at 3.21.55 PM.png',
+        'Screenshot 2025-08-08 at 3.22.08 PM.png',
+        'Screenshot 2025-08-08 at 3.22.18 PM.png',
+        'Screenshot 2025-08-08 at 3.22.29 PM.png',
+        'Screenshot 2025-08-08 at 3.22.42 PM.png',
+        'Screenshot 2025-08-08 at 3.22.54 PM.png',
+        'Screenshot 2025-08-08 at 3.23.05 PM.png',
+        'Screenshot 2025-08-08 at 3.23.14 PM.png'
+    ];
+
+    const teamPhotoGrid = document.getElementById('team-photo-grid-main');
+    
+    if (!teamPhotoGrid) return;
+
+    teamPhotos.forEach((photo, index) => {
+        const img = document.createElement('img');
+        img.src = `team/${photo}`;
+        img.alt = `Team Member ${index + 1}`;
+        img.className = 'team-photo-main';
+        img.dataset.photoIndex = index;
+        img.dataset.photoName = photo;
+        
+        // Add click handler
+        img.addEventListener('click', (e) => handleMainPhotoClick(e));
+        
+        // Add error handling
+        img.addEventListener('error', (e) => {
+            console.warn(`Failed to load team photo: ${photo}`);
+            e.target.style.display = 'none';
+        });
+        
+        teamPhotoGrid.appendChild(img);
+    });
+}
+
+function handleMainPhotoClick(event) {
+    const clickedPhoto = event.target;
+    const photoIndex = clickedPhoto.dataset.photoIndex;
+    const photoName = clickedPhoto.dataset.photoName;
+    
+    // Remove selected class from all photos
+    document.querySelectorAll('.team-photo-main').forEach(photo => {
+        photo.classList.remove('selected');
+    });
+    
+    // Add selected class to clicked photo
+    clickedPhoto.classList.add('selected');
+    
+    console.log('Main page team photo selected:', { index: photoIndex, name: photoName });
+    
+    // Show notification
+    showMainPhotoNotification();
+}
+
+function showMainPhotoNotification() {
+    // Create a temporary notification
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: #1e3a8a;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        z-index: 1000;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    `;
+    notification.textContent = 'Team member selected!';
+    
+    document.body.appendChild(notification);
+    
+    // Animate in
+    setTimeout(() => notification.style.opacity = '1', 10);
+    
+    // Remove after 2 seconds
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        setTimeout(() => notification.remove(), 300);
     }, 2000);
 }
