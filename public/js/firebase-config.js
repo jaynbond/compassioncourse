@@ -1,12 +1,12 @@
 // Firebase Configuration
-// Replace these values with your actual Firebase config
 const firebaseConfig = {
-  apiKey: "your-api-key-here",
-  authDomain: "your-project-id.firebaseapp.com",
-  projectId: "your-project-id",
-  storageBucket: "your-project-id.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "your-app-id"
+  apiKey: "AIzaSyBRuvJj3HGzJ_pwyB6vvPdw2IbghQz342I",
+  authDomain: "compassion-course-website.firebaseapp.com",
+  projectId: "compassion-course-website",
+  storageBucket: "compassion-course-website.firebasestorage.app",
+  messagingSenderId: "622313914766",
+  appId: "1:622313914766:web:3812fa34665fae0c0764df",
+  measurementId: "G-2BBHCYYHJK"
 };
 
 // Initialize Firebase
