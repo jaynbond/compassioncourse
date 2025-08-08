@@ -5,6 +5,10 @@ import { contentService } from './js/firebase-content.js';
 document.addEventListener('DOMContentLoaded', function() {
     // Load dynamic content from Firebase
     loadDynamicContent();
+    
+    // Initialize animated text
+    initAnimatedText();
+    
     // Mobile Navigation
     const hamburger = document.querySelector('.hamburger');
     const navMenu = document.querySelector('.nav-menu');
@@ -500,4 +504,28 @@ if ('performance' in window) {
             console.log('Page load time:', perfData.loadEventEnd - perfData.loadEventStart + 'ms');
         }, 0);
     });
+}
+
+// Animated text functionality
+function initAnimatedText() {
+    const animatedTextElement = document.getElementById('animatedText');
+    if (!animatedTextElement) return;
+    
+    const messages = [
+        'Build lasting empathy practices',
+        'Be heard and understood',
+        'Create meaningful dialogue',
+        'Live in alignment with your values',
+        'Join a global compassion community'
+    ];
+    
+    let currentIndex = 0;
+    
+    function updateText() {
+        animatedTextElement.textContent = messages[currentIndex];
+        currentIndex = (currentIndex + 1) % messages.length;
+    }
+    
+    // Update text every 2 seconds
+    setInterval(updateText, 2000);
 }

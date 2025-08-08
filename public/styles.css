@@ -196,11 +196,17 @@ p {
 
 /* Hero Section */
 .hero {
-    background: white;
-    color: #1f2937;
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('hero-background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: white;
     padding: 120px 0 80px;
     margin-top: 80px;
-    border-bottom: 1px solid #e5e7eb;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
 }
 
 .hero-container {
@@ -218,23 +224,59 @@ p {
     font-size: 4rem;
     margin-bottom: 1rem;
     font-weight: 700;
-    color: #111827;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .hero-subtitle {
     font-size: 1.5rem;
     margin-bottom: 2rem;
-    color: #3b82f6;
+    color: #fbbf24;
     font-weight: 600;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .hero-description {
     font-size: 1.25rem;
     max-width: 800px;
     margin: 0 auto 3rem;
-    color: #4b5563;
+    color: white;
     line-height: 1.75;
     font-weight: 400;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.animated-text {
+    height: 80px;
+    overflow: hidden;
+    margin: 2rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.animated-text-content {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #fbbf24;
+    text-align: center;
+    animation: slideUp 10s infinite;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+@keyframes slideUp {
+    0%, 18% { 
+        transform: translateY(0);
+        opacity: 1;
+    }
+    20%, 98% { 
+        transform: translateY(-100px);
+        opacity: 0;
+    }
+    100% { 
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .hero-buttons {
