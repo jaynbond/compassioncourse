@@ -648,10 +648,45 @@ function initTeamPhotoGrid() {
         // Add click handler
         img.addEventListener('click', (e) => handleMainPhotoClick(e));
         
-        // Add error handling
+        // Add error handling with colored placeholder
         img.addEventListener('error', (e) => {
             console.warn(`Failed to load team photo: ${photo}`);
-            e.target.style.display = 'none';
+            // Replace with colored placeholder
+            const placeholder = document.createElement('div');
+            placeholder.style.cssText = `
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(135deg, 
+                    hsl(${index * 40}, 70%, 60%), 
+                    hsl(${index * 40 + 20}, 70%, 70%));
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-weight: bold;
+                font-size: 12px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                border: 2px solid rgba(255, 255, 255, 0.3);
+            `;
+            placeholder.textContent = `${index + 1}`;
+            placeholder.className = 'team-photo-main';
+            placeholder.dataset.photoIndex = index;
+            placeholder.dataset.photoName = photo;
+            placeholder.addEventListener('click', (e) => handleMainPhotoClick(e));
+            
+            // Add hover effect
+            placeholder.addEventListener('mouseenter', () => {
+                placeholder.style.transform = 'scale(1.1)';
+                placeholder.style.borderColor = '#fbbf24';
+            });
+            placeholder.addEventListener('mouseleave', () => {
+                placeholder.style.transform = 'scale(1)';
+                placeholder.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+            });
+            
+            e.target.parentNode.replaceChild(placeholder, e.target);
         });
         
         teamPhotoGrid.appendChild(img);
