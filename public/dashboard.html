@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Compassion Course</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo h2 {
+            color: #1e3a8a;
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        .nav-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .btn-logout {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .btn-logout:hover {
+            background: #dc2626;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .dashboard-header {
+            margin-bottom: 3rem;
+        }
+
+        .dashboard-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1e3a8a;
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-header p {
+            font-size: 1.125rem;
+            color: #64748b;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-icon i {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .dashboard-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+
+        .dashboard-card p {
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-button {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .card-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .profile-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .profile-info h2 {
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-info p {
+            color: #64748b;
+            margin: 0;
+        }
+
+        .profile-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .detail-item {
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 1rem;
+        }
+
+        .detail-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #64748b;
+            margin-bottom: 0.25rem;
+        }
+
+        .detail-value {
+            font-size: 1rem;
+            color: #1e293b;
+            font-weight: 500;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #64748b;
+        }
+
+        .loading i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .alert-error {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-header h1 {
+                font-size: 2rem;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>Compassion Course</h2>
+            </div>
+            <div class="nav-user">
+                <div class="user-info" id="user-info" style="display: none;">
+                    <div class="user-avatar" id="user-avatar">U</div>
+                    <span id="user-name">Loading...</span>
+                </div>
+                <button class="btn-logout" id="logout-btn" style="display: none;">
+                    <i class="fas fa-sign-out-alt"></i> Sign Out
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Loading State -->
+        <div class="loading" id="loading">
+            <i class="fas fa-spinner"></i>
+            <p>Loading your dashboard...</p>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div id="dashboard-content" style="display: none;">
+            <div class="dashboard-header">
+                <h1>Welcome to Your Dashboard</h1>
+                <p>Explore your Compassion Course journey and access exclusive member content.</p>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <div class="card-icon">
+                        <i class="fas fa-play-circle"></i>
+                    </div>
+                    <h3>Course Content</h3>
+                    <p>Access your enrolled courses, watch videos, and track your progress through the Compassion Course curriculum.</p>
+                    <a href="#" class="card-button">View Courses</a>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Community</h3>
+                    <p>Connect with fellow members, participate in discussions, and share your compassion journey.</p>
+                    <a href="#" class="card-button">Join Community</a>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-icon">
+                        <i class="fas fa-calendar"></i>
+                    </div>
+                    <h3>Events & Workshops</h3>
+                    <p>Register for live workshops, webinars, and special events exclusive to members.</p>
+                    <a href="#" class="card-button">View Events</a>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-icon">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <h3>Achievements</h3>
+                    <p>Track your progress, earn certificates, and celebrate your growth milestones.</p>
+                    <a href="#" class="card-button">View Progress</a>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-icon">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h3>Resources</h3>
+                    <p>Download exclusive guides, worksheets, and bonus materials to support your journey.</p>
+                    <a href="#" class="card-button">Browse Resources</a>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-icon">
+                        <i class="fas fa-user-cog"></i>
+                    </div>
+                    <h3>Profile Settings</h3>
+                    <p>Update your profile, manage notifications, and customize your dashboard experience.</p>
+                    <a href="#" class="card-button">Edit Profile</a>
+                </div>
+            </div>
+
+            <!-- Profile Section -->
+            <div class="profile-section">
+                <div class="profile-header">
+                    <div class="profile-avatar" id="profile-avatar">U</div>
+                    <div class="profile-info">
+                        <h2 id="profile-name">Loading...</h2>
+                        <p id="profile-email">Loading...</p>
+                    </div>
+                </div>
+
+                <div class="profile-details" id="profile-details">
+                    <!-- Profile details will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Error State -->
+        <div id="error-container"></div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    
+    <!-- App Scripts -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/firebase-auth.js"></script>
+
+    <script>
+        class Dashboard {
+            constructor() {
+                this.loadingEl = document.getElementById('loading');
+                this.dashboardContent = document.getElementById('dashboard-content');
+                this.errorContainer = document.getElementById('error-container');
+                this.logoutBtn = document.getElementById('logout-btn');
+                this.userInfo = document.getElementById('user-info');
+                
+                this.init();
+            }
+
+            init() {
+                // Set up logout button
+                this.logoutBtn.addEventListener('click', () => this.handleLogout());
+
+                // Check authentication state
+                this.checkAuth();
+            }
+
+            async checkAuth() {
+                try {
+                    // Wait for authService to be ready
+                    if (!window.authService) {
+                        setTimeout(() => this.checkAuth(), 100);
+                        return;
+                    }
+
+                    window.authService.onAuthStateChanged((user) => {
+                        if (user) {
+                            this.loadUserData(user);
+                        } else {
+                            // Redirect to login if not authenticated
+                            window.location.href = '/auth/login.html';
+                        }
+                    });
+                } catch (error) {
+                    console.error('Auth check error:', error);
+                    this.showError('Failed to verify authentication. Please try again.');
+                }
+            }
+
+            async loadUserData(user) {
+                try {
+                    // Update UI with user info
+                    this.updateNavUser(user);
+                    this.updateProfileHeader(user);
+
+                    // Load additional profile data from Firestore
+                    const profileResult = await window.authService.getUserProfile();
+                    
+                    if (profileResult.success) {
+                        this.updateProfileDetails(profileResult.data, user);
+                    }
+
+                    // Show dashboard content
+                    this.loadingEl.style.display = 'none';
+                    this.dashboardContent.style.display = 'block';
+                    this.userInfo.style.display = 'flex';
+                    this.logoutBtn.style.display = 'block';
+
+                } catch (error) {
+                    console.error('Load user data error:', error);
+                    this.showError('Failed to load user data. Please refresh the page.');
+                }
+            }
+
+            updateNavUser(user) {
+                const userAvatar = document.getElementById('user-avatar');
+                const userName = document.getElementById('user-name');
+                
+                const displayName = user.displayName || user.email.split('@')[0];
+                const initials = this.getInitials(displayName);
+                
+                userAvatar.textContent = initials;
+                userName.textContent = displayName;
+            }
+
+            updateProfileHeader(user) {
+                const profileAvatar = document.getElementById('profile-avatar');
+                const profileName = document.getElementById('profile-name');
+                const profileEmail = document.getElementById('profile-email');
+                
+                const displayName = user.displayName || user.email.split('@')[0];
+                const initials = this.getInitials(displayName);
+                
+                profileAvatar.textContent = initials;
+                profileName.textContent = displayName;
+                profileEmail.textContent = user.email;
+            }
+
+            updateProfileDetails(profileData, user) {
+                const profileDetails = document.getElementById('profile-details');
+                
+                const joinDate = profileData.createdAt ? 
+                    new Date(profileData.createdAt.toDate()).toLocaleDateString() : 
+                    'Unknown';
+                
+                profileDetails.innerHTML = `
+                    <div class="detail-item">
+                        <div class="detail-label">Email Address</div>
+                        <div class="detail-value">${user.email}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Member Since</div>
+                        <div class="detail-value">${joinDate}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Account Status</div>
+                        <div class="detail-value">${profileData.active ? 'Active' : 'Inactive'}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Member Type</div>
+                        <div class="detail-value">${profileData.role || 'Member'}</div>
+                    </div>
+                `;
+            }
+
+            getInitials(name) {
+                return name.split(' ').map(word => word[0]).join('').toUpperCase().substring(0, 2);
+            }
+
+            async handleLogout() {
+                try {
+                    const result = await window.authService.signOut();
+                    if (result.success) {
+                        window.location.href = '/';
+                    } else {
+                        this.showError('Failed to sign out. Please try again.');
+                    }
+                } catch (error) {
+                    console.error('Logout error:', error);
+                    this.showError('Failed to sign out. Please try again.');
+                }
+            }
+
+            showError(message) {
+                const alert = document.createElement('div');
+                alert.className = 'alert alert-error';
+                alert.textContent = message;
+                
+                this.errorContainer.innerHTML = '';
+                this.errorContainer.appendChild(alert);
+                
+                this.loadingEl.style.display = 'none';
+            }
+        }
+
+        // Initialize dashboard when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new Dashboard();
+        });
+    </script>
+</body>
+</html>

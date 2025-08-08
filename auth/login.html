@@ -155,7 +155,7 @@
     <div class="login-container">
         <div class="login-header">
             <h1>Welcome Back</h1>
-            <p>Sign in to access the admin panel</p>
+            <p>Sign in to your Compassion Course account</p>
         </div>
 
         <div id="alert-container"></div>
@@ -183,9 +183,20 @@
         </form>
 
         <div class="links">
+            <a href="#register" id="register-link">Don't have an account? Register</a><br><br>
+            <a href="#forgot-password" id="forgot-password-link">Forgot your password?</a><br><br>
             <a href="/">← Back to Website</a>
         </div>
     </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    
+    <!-- App Scripts -->
+    <script src="../public/js/firebase-config.js"></script>
+    <script src="../public/js/firebase-auth.js"></script>
 
     <script>
         class LoginForm {
@@ -194,6 +205,8 @@
                 this.alertContainer = document.getElementById('alert-container');
                 this.loginBtn = document.getElementById('login-btn');
                 this.loading = document.getElementById('loading');
+                this.registerLink = document.getElementById('register-link');
+                this.forgotPasswordLink = document.getElementById('forgot-password-link');
                 
                 this.init();
             }
@@ -204,25 +217,35 @@
                     this.handleLogin();
                 });
 
+                this.registerLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.showRegistrationForm();
+                });
+
+                this.forgotPasswordLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.showForgotPasswordForm();
+                });
+
                 // Check if already logged in
                 this.checkExistingAuth();
             }
 
             async checkExistingAuth() {
-                try {
-                    const response = await fetch('/api/auth/me', {
-                        credentials: 'include'
-                    });
-
-                    if (response.ok) {
-                        const data = await response.json();
-                        if (['admin', 'super-admin'].includes(data.user.role)) {
-                            window.location.href = '/admin';
-                        }
-                    }
-                } catch (error) {
-                    // Not logged in, continue with login form
+                // Wait for authService to be ready
+                if (!window.authService) {
+                    setTimeout(() => this.checkExistingAuth(), 100);
+                    return;
                 }
+
+                window.authService.onAuthStateChanged((user) => {
+                    if (user) {
+                        this.showAlert('Already signed in! Redirecting to dashboard...', 'success');
+                        setTimeout(() => {
+                            window.location.href = '/dashboard.html';
+                        }, 1500);
+                    }
+                });
             }
 
             async handleLogin() {
@@ -232,36 +255,157 @@
                 this.setLoading(true);
                 this.clearAlerts();
 
-                try {
-                    const response = await fetch('/api/auth/login', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        credentials: 'include',
-                        body: JSON.stringify({ email, password })
-                    });
+                const result = await window.authService.signIn(email, password);
 
-                    const data = await response.json();
+                if (result.success) {
+                    this.showAlert('Login successful! Redirecting...', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/dashboard.html';
+                    }, 1500);
+                } else {
+                    this.showAlert(result.error, 'error');
+                    this.setLoading(false);
+                }
+            }
 
-                    if (response.ok) {
-                        // Check if user has admin privileges
-                        if (['admin', 'super-admin'].includes(data.user.role)) {
-                            this.showAlert('Login successful! Redirecting...', 'success');
-                            setTimeout(() => {
-                                window.location.href = '/admin';
-                            }, 1000);
-                        } else {
-                            this.showAlert('Access denied. Admin privileges required.', 'error');
-                            this.setLoading(false);
-                        }
-                    } else {
-                        this.showAlert(data.error || 'Login failed', 'error');
-                        this.setLoading(false);
-                    }
-                } catch (error) {
-                    console.error('Login error:', error);
-                    this.showAlert('Network error. Please try again.', 'error');
+            showRegistrationForm() {
+                // Replace login form with registration form
+                const loginHeader = document.querySelector('.login-header');
+                loginHeader.innerHTML = `
+                    <h1>Join Our Community</h1>
+                    <p>Create your Compassion Course account</p>
+                `;
+
+                const form = document.getElementById('login-form');
+                form.innerHTML = `
+                    <div class="form-group">
+                        <label for="display-name">Full Name</label>
+                        <input type="text" id="display-name" class="form-control" required 
+                               placeholder="Enter your full name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" class="form-control" required 
+                               placeholder="Enter your email">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" class="form-control" required 
+                               placeholder="Choose a strong password (min 6 characters)">
+                    </div>
+
+                    <button type="submit" class="btn" id="register-btn">
+                        Create Account
+                    </button>
+
+                    <div class="loading" id="loading">
+                        Creating account...
+                    </div>
+                `;
+
+                // Update links
+                document.querySelector('.links').innerHTML = `
+                    <a href="#login" id="login-link">Already have an account? Sign in</a><br><br>
+                    <a href="/">← Back to Website</a>
+                `;
+
+                // Re-bind events
+                this.loginBtn = document.getElementById('register-btn');
+                this.loading = document.getElementById('loading');
+                
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleRegistration();
+                });
+
+                document.getElementById('login-link').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    location.reload(); // Reload to show login form
+                });
+            }
+
+            async handleRegistration() {
+                const displayName = document.getElementById('display-name').value;
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                this.setLoading(true);
+                this.clearAlerts();
+
+                const result = await window.authService.signUp(email, password, displayName);
+
+                if (result.success) {
+                    this.showAlert('Account created successfully! Redirecting...', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/dashboard.html';
+                    }, 1500);
+                } else {
+                    this.showAlert(result.error, 'error');
+                    this.setLoading(false);
+                }
+            }
+
+            showForgotPasswordForm() {
+                // Replace form with password reset
+                const loginHeader = document.querySelector('.login-header');
+                loginHeader.innerHTML = `
+                    <h1>Reset Password</h1>
+                    <p>Enter your email to receive reset instructions</p>
+                `;
+
+                const form = document.getElementById('login-form');
+                form.innerHTML = `
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" class="form-control" required 
+                               placeholder="Enter your email">
+                    </div>
+
+                    <button type="submit" class="btn" id="reset-btn">
+                        Send Reset Email
+                    </button>
+
+                    <div class="loading" id="loading">
+                        Sending email...
+                    </div>
+                `;
+
+                // Update links
+                document.querySelector('.links').innerHTML = `
+                    <a href="#login" id="login-link">← Back to Login</a><br><br>
+                    <a href="/">← Back to Website</a>
+                `;
+
+                // Re-bind events
+                this.loginBtn = document.getElementById('reset-btn');
+                this.loading = document.getElementById('loading');
+                
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handlePasswordReset();
+                });
+
+                document.getElementById('login-link').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    location.reload(); // Reload to show login form
+                });
+            }
+
+            async handlePasswordReset() {
+                const email = document.getElementById('email').value;
+
+                this.setLoading(true);
+                this.clearAlerts();
+
+                const result = await window.authService.resetPassword(email);
+
+                if (result.success) {
+                    this.showAlert('Password reset email sent! Check your inbox.', 'success');
+                    this.setLoading(false);
+                } else {
+                    this.showAlert(result.error, 'error');
                     this.setLoading(false);
                 }
             }
@@ -269,12 +413,6 @@
             setLoading(loading) {
                 this.loginBtn.disabled = loading;
                 this.loading.style.display = loading ? 'block' : 'none';
-                
-                if (loading) {
-                    this.loginBtn.textContent = 'Signing In...';
-                } else {
-                    this.loginBtn.textContent = 'Sign In';
-                }
             }
 
             showAlert(message, type = 'error') {
@@ -291,7 +429,7 @@
                         if (alert.parentNode) {
                             alert.remove();
                         }
-                    }, 3000);
+                    }, 5000);
                 }
             }
 
