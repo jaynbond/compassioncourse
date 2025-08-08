@@ -630,11 +630,16 @@ function initTeamPhotoGrid() {
 
     const teamPhotoGrid = document.getElementById('team-photo-grid-main');
     
-    if (!teamPhotoGrid) return;
+    if (!teamPhotoGrid) {
+        console.log('Team photo grid element not found');
+        return;
+    }
+    
+    console.log('Loading team photos into grid...');
 
     teamPhotos.forEach((photo, index) => {
         const img = document.createElement('img');
-        img.src = `Team/${photo}`;
+        img.src = `team/${photo}`;
         img.alt = `Team Member ${index + 1}`;
         img.className = 'team-photo-main';
         img.dataset.photoIndex = index;
