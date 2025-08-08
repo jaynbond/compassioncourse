@@ -549,6 +549,7 @@ p {
     gap: 1rem;
     justify-content: center;
     flex-wrap: wrap;
+    margin-top: 200px;
 }
 
 .hero-buttons .btn-primary {
