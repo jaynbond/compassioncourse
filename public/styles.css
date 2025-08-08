@@ -798,13 +798,14 @@ section {
 /* Team Photo Grid for Main Page */
 .team-photo-grid-main {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    gap: 6px;
     width: 300px;
-    height: 300px;
+    height: 360px;
     background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
     border-radius: 12px;
-    padding: 20px;
+    padding: 15px;
 }
 
 .team-photo-main {

@@ -615,7 +615,7 @@ function initHeroBackground() {
 
 // Team Photo Grid for Main Page
 function initTeamPhotoGrid() {
-    // List of team photos
+    // List of team photos (expanded for 5x5 grid)
     const teamPhotos = [
         'Screenshot 2025-08-08 at 3.21.45 PM.png',
         'Screenshot 2025-08-08 at 3.21.55 PM.png',
@@ -625,7 +625,29 @@ function initTeamPhotoGrid() {
         'Screenshot 2025-08-08 at 3.22.42 PM.png',
         'Screenshot 2025-08-08 at 3.22.54 PM.png',
         'Screenshot 2025-08-08 at 3.23.05 PM.png',
-        'Screenshot 2025-08-08 at 3.23.14 PM.png'
+        'Screenshot 2025-08-08 at 3.23.14 PM.png',
+        'Screenshot 2025-08-08 at 3.23.27 PM.png',
+        'Screenshot 2025-08-08 at 3.23.37 PM.png',
+        'Screenshot 2025-08-08 at 3.23.49 PM.png',
+        'Screenshot 2025-08-08 at 3.24.02 PM.png',
+        'Screenshot 2025-08-08 at 3.24.15 PM.png',
+        'Screenshot 2025-08-08 at 3.24.24 PM.png',
+        'Screenshot 2025-08-08 at 3.24.34 PM.png',
+        'Screenshot 2025-08-08 at 3.24.44 PM.png',
+        'Screenshot 2025-08-08 at 3.24.55 PM.png',
+        // Additional placeholders to fill 5x6 grid (30 total)
+        'team-member-19.png',
+        'team-member-20.png',
+        'team-member-21.png',
+        'team-member-22.png',
+        'team-member-23.png',
+        'team-member-24.png',
+        'team-member-25.png',
+        'team-member-26.png',
+        'team-member-27.png',
+        'team-member-28.png',
+        'team-member-29.png',
+        'team-member-30.png'
     ];
 
     const teamPhotoGrid = document.getElementById('team-photo-grid-main');
