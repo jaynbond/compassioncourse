@@ -134,6 +134,36 @@
             color: white;
         }
 
+        /* Team Photo Grid Styles */
+        .team-photo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 1.5rem;
+            max-width: 200px;
+        }
+
+        .team-photo {
+            width: 100%;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .team-photo:hover {
+            transform: scale(1.05);
+            border-color: #3b82f6;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .team-photo.selected {
+            border-color: #1e3a8a;
+            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.2);
+        }
+
         .dashboard-card h3 {
             font-size: 1.5rem;
             font-weight: 600;
@@ -317,12 +347,12 @@
                 </div>
 
                 <div class="dashboard-card">
-                    <div class="card-icon">
-                        <i class="fas fa-users"></i>
+                    <div class="team-photo-grid" id="team-photo-grid">
+                        <!-- Team photos will be loaded here dynamically -->
                     </div>
-                    <h3>Community</h3>
-                    <p>Connect with fellow members, participate in discussions, and share your compassion journey.</p>
-                    <a href="#" class="card-button">Join Community</a>
+                    <h3>Our Team</h3>
+                    <p>Meet the compassionate leaders and instructors who guide your journey toward greater empathy and understanding.</p>
+                    <a href="#" class="card-button">Meet the Team</a>
                 </div>
 
                 <div class="dashboard-card">
@@ -399,6 +429,7 @@
                 this.errorContainer = document.getElementById('error-container');
                 this.logoutBtn = document.getElementById('logout-btn');
                 this.userInfo = document.getElementById('user-info');
+                this.selectedPhoto = null;
                 
                 this.init();
             }
@@ -407,8 +438,107 @@
                 // Set up logout button
                 this.logoutBtn.addEventListener('click', () => this.handleLogout());
 
+                // Load team photos
+                this.loadTeamPhotos();
+
                 // Check authentication state
                 this.checkAuth();
+            }
+
+            loadTeamPhotos() {
+                // List of team photos - using the actual filenames from the team folder
+                const teamPhotos = [
+                    'Screenshot 2025-08-08 at 3.21.45 PM.png',
+                    'Screenshot 2025-08-08 at 3.21.55 PM.png',
+                    'Screenshot 2025-08-08 at 3.22.08 PM.png',
+                    'Screenshot 2025-08-08 at 3.22.18 PM.png',
+                    'Screenshot 2025-08-08 at 3.22.29 PM.png',
+                    'Screenshot 2025-08-08 at 3.22.42 PM.png',
+                    'Screenshot 2025-08-08 at 3.22.54 PM.png',
+                    'Screenshot 2025-08-08 at 3.23.05 PM.png',
+                    'Screenshot 2025-08-08 at 3.23.14 PM.png'
+                ];
+
+                const teamPhotoGrid = document.getElementById('team-photo-grid');
+                
+                teamPhotos.forEach((photo, index) => {
+                    const img = document.createElement('img');
+                    img.src = `team/${photo}`;
+                    img.alt = `Team Member ${index + 1}`;
+                    img.className = 'team-photo';
+                    img.dataset.photoIndex = index;
+                    img.dataset.photoName = photo;
+                    
+                    // Add click handler for each photo
+                    img.addEventListener('click', (e) => this.handlePhotoClick(e));
+                    
+                    // Add error handling for missing images
+                    img.addEventListener('error', (e) => {
+                        console.warn(`Failed to load team photo: ${photo}`);
+                        e.target.style.display = 'none';
+                    });
+                    
+                    teamPhotoGrid.appendChild(img);
+                });
+            }
+
+            handlePhotoClick(event) {
+                const clickedPhoto = event.target;
+                const photoIndex = clickedPhoto.dataset.photoIndex;
+                const photoName = clickedPhoto.dataset.photoName;
+                
+                // Remove selected class from all photos
+                document.querySelectorAll('.team-photo').forEach(photo => {
+                    photo.classList.remove('selected');
+                });
+                
+                // Add selected class to clicked photo
+                clickedPhoto.classList.add('selected');
+                
+                // Store selected photo data
+                this.selectedPhoto = {
+                    index: photoIndex,
+                    name: photoName,
+                    element: clickedPhoto
+                };
+                
+                console.log('Team photo selected:', this.selectedPhoto);
+                
+                // You can add additional logic here for when photos are tapped
+                // For example: show details, open modal, etc.
+                
+                // Show a subtle feedback
+                this.showPhotoSelected(photoName);
+            }
+
+            showPhotoSelected(photoName) {
+                // Create a temporary notification
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    background: #1e3a8a;
+                    color: white;
+                    padding: 12px 20px;
+                    border-radius: 8px;
+                    font-size: 14px;
+                    z-index: 1000;
+                    opacity: 0;
+                    transition: opacity 0.3s ease;
+                `;
+                notification.textContent = `Selected: Team Member`;
+                
+                document.body.appendChild(notification);
+                
+                // Animate in
+                setTimeout(() => notification.style.opacity = '1', 10);
+                
+                // Remove after 2 seconds
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    setTimeout(() => notification.remove(), 300);
+                }, 2000);
             }
 
             async checkAuth() {
