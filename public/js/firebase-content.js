@@ -1,19 +1,5 @@
 // Firebase Content Management Service
-import {
-  collection,
-  doc,
-  getDocs,
-  getDoc,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  query,
-  where,
-  orderBy,
-  onSnapshot,
-  serverTimestamp
-} from 'firebase/firestore';
-import { db } from './firebase-config.js';
+// Using Firebase v9 compat mode
 
 class ContentService {
   constructor() {

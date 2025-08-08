@@ -1,5 +1,4 @@
-// Import Firebase services
-import { contentService } from './js/firebase-content.js';
+// Firebase services will be available globally
 
 // DOM Content Loaded
 document.addEventListener('DOMContentLoaded', function() {
@@ -346,8 +345,16 @@ async function loadDynamicContent() {
     try {
         console.log('Loading dynamic content from Firebase...');
         
-        // Get all published content
-        const result = await contentService.getPublishedContent();
+        // Wait for Firebase to be ready
+        if (!window.db) {
+            console.log('⏳ Waiting for Firebase to initialize...');
+            setTimeout(loadDynamicContent, 1000);
+            return;
+        }
+        
+        // Skip Firebase content loading for now - use static content
+        console.log('📄 Using static content');
+        return;
         
         if (result.success) {
             const content = contentService.groupContentBySection(result.content);

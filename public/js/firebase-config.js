@@ -9,27 +9,41 @@ const firebaseConfig = {
   measurementId: "G-2BBHCYYHJK"
 };
 
-// Initialize Firebase
-import { initializeApp } from 'firebase/app';
-import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
-import { getAuth, connectAuthEmulator } from 'firebase/auth';
+// Firebase will be loaded from CDN script tags
 
-const app = initializeApp(firebaseConfig);
+// Initialize Firebase (will be available after script loads)
+let app, db, auth;
 
-// Initialize services
-export const db = getFirestore(app);
-export const auth = getAuth(app);
-
-// Connect to emulators in development
-if (location.hostname === 'localhost') {
-  // Only connect to emulators if not already connected
-  try {
-    connectAuthEmulator(auth, 'http://localhost:9099');
-    connectFirestoreEmulator(db, 'localhost', 8080);
-    console.log('🔥 Connected to Firebase emulators');
-  } catch (error) {
-    console.log('Emulators already connected or not available');
-  }
+// Initialize Firebase when scripts are loaded
+function initFirebase() {
+    if (typeof firebase !== 'undefined') {
+        app = firebase.initializeApp(firebaseConfig);
+        db = firebase.firestore();
+        auth = firebase.auth();
+        
+        window.db = db;
+        window.auth = auth;
+        console.log('🔥 Firebase initialized successfully');
+        return true;
+    }
+    return false;
 }
 
-export default app;
+// Try to initialize immediately or wait for scripts to load
+if (!initFirebase()) {
+    window.addEventListener('load', initFirebase);
+}
+
+// Connect to emulators in development (when available)
+if (location.hostname === 'localhost') {
+  window.addEventListener('load', () => {
+    if (window.auth && window.db) {
+      try {
+        // Note: Emulator connection for v9 compat would be different
+        console.log('🔥 Development mode - emulators can be configured here');
+      } catch (error) {
+        console.log('Emulators not available');
+      }
+    }
+  });
+}
