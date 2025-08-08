@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize animated text
     initAnimatedText();
     
-    // Initialize hero slideshow
-    initHeroSlideshow();
+    // Initialize hero background
+    initHeroBackground();
     
     // Mobile Navigation
     const hamburger = document.querySelector('.hamburger');
@@ -533,24 +533,27 @@ function initAnimatedText() {
     setInterval(updateText, 2000);
 }
 
-// Hero slideshow functionality
-function initHeroSlideshow() {
-    const slides = document.querySelectorAll('.hero-slide');
-    if (slides.length === 0) return;
+// Hero background functionality
+function initHeroBackground() {
+    const heroSection = document.querySelector('.hero');
+    if (!heroSection) return;
     
-    let currentSlide = 0;
+    // Test if image loads
+    const img = new Image();
+    img.onload = function() {
+        console.log('Hero background image loaded successfully');
+        heroSection.classList.add('with-bg');
+    };
+    img.onerror = function() {
+        console.error('Failed to load hero background image');
+        // Keep the gradient background as fallback
+    };
+    img.src = 'hero-background.jpg';
     
-    function nextSlide() {
-        // Remove active class from current slide
-        slides[currentSlide].classList.remove('active');
-        
-        // Move to next slide
-        currentSlide = (currentSlide + 1) % slides.length;
-        
-        // Add active class to new slide
-        slides[currentSlide].classList.add('active');
-    }
-    
-    // Change slide every 4 seconds
-    setInterval(nextSlide, 4000);
+    // Fallback: add class after a delay even if image doesn't load
+    setTimeout(() => {
+        if (!heroSection.classList.contains('with-bg')) {
+            heroSection.classList.add('with-bg');
+        }
+    }, 2000);
 }

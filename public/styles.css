@@ -196,11 +196,7 @@ p {
 
 /* Hero Section */
 .hero {
-    background-color: #1e3a8a;
-    background-image: url('./hero-background.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%) !important;
     color: white;
     padding: 120px 0 80px;
     margin-top: 80px;
@@ -209,6 +205,14 @@ p {
     align-items: center;
     position: relative;
     overflow: hidden;
+}
+
+.hero.with-bg {
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('hero-background.jpg') !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: scroll !important;
 }
 
 .hero::before {
