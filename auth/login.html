@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Compassion Course</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1e293b;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 16px;
+            padding: 3rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-header h1 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #1e3a8a;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-header p {
+            color: #64748b;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s;
+            background: #f9fafb;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .alert-error {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .alert-success {
+            background: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #bbf7d0;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .links a {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 1rem;
+            color: #64748b;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                margin: 1rem;
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>Welcome Back</h1>
+            <p>Sign in to access the admin panel</p>
+        </div>
+
+        <div id="alert-container"></div>
+
+        <form id="login-form">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" class="form-control" required 
+                       placeholder="Enter your email">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" class="form-control" required 
+                       placeholder="Enter your password">
+            </div>
+
+            <button type="submit" class="btn" id="login-btn">
+                Sign In
+            </button>
+
+            <div class="loading" id="loading">
+                Signing in...
+            </div>
+        </form>
+
+        <div class="links">
+            <a href="/">← Back to Website</a>
+        </div>
+    </div>
+
+    <script>
+        class LoginForm {
+            constructor() {
+                this.form = document.getElementById('login-form');
+                this.alertContainer = document.getElementById('alert-container');
+                this.loginBtn = document.getElementById('login-btn');
+                this.loading = document.getElementById('loading');
+                
+                this.init();
+            }
+
+            init() {
+                this.form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleLogin();
+                });
+
+                // Check if already logged in
+                this.checkExistingAuth();
+            }
+
+            async checkExistingAuth() {
+                try {
+                    const response = await fetch('/api/auth/me', {
+                        credentials: 'include'
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (['admin', 'super-admin'].includes(data.user.role)) {
+                            window.location.href = '/admin';
+                        }
+                    }
+                } catch (error) {
+                    // Not logged in, continue with login form
+                }
+            }
+
+            async handleLogin() {
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                this.setLoading(true);
+                this.clearAlerts();
+
+                try {
+                    const response = await fetch('/api/auth/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: 'include',
+                        body: JSON.stringify({ email, password })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        // Check if user has admin privileges
+                        if (['admin', 'super-admin'].includes(data.user.role)) {
+                            this.showAlert('Login successful! Redirecting...', 'success');
+                            setTimeout(() => {
+                                window.location.href = '/admin';
+                            }, 1000);
+                        } else {
+                            this.showAlert('Access denied. Admin privileges required.', 'error');
+                            this.setLoading(false);
+                        }
+                    } else {
+                        this.showAlert(data.error || 'Login failed', 'error');
+                        this.setLoading(false);
+                    }
+                } catch (error) {
+                    console.error('Login error:', error);
+                    this.showAlert('Network error. Please try again.', 'error');
+                    this.setLoading(false);
+                }
+            }
+
+            setLoading(loading) {
+                this.loginBtn.disabled = loading;
+                this.loading.style.display = loading ? 'block' : 'none';
+                
+                if (loading) {
+                    this.loginBtn.textContent = 'Signing In...';
+                } else {
+                    this.loginBtn.textContent = 'Sign In';
+                }
+            }
+
+            showAlert(message, type = 'error') {
+                const alert = document.createElement('div');
+                alert.className = `alert alert-${type}`;
+                alert.textContent = message;
+                
+                this.alertContainer.innerHTML = '';
+                this.alertContainer.appendChild(alert);
+
+                // Auto-remove success alerts
+                if (type === 'success') {
+                    setTimeout(() => {
+                        if (alert.parentNode) {
+                            alert.remove();
+                        }
+                    }, 3000);
+                }
+            }
+
+            clearAlerts() {
+                this.alertContainer.innerHTML = '';
+            }
+        }
+
+        // Initialize login form when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new LoginForm();
+        });
+    </script>
+</body>
+</html>

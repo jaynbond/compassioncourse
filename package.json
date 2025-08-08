@@ -1,0 +1,35 @@
+{
+  "name": "compassion-course-netlify-firebase",
+  "version": "1.0.0",
+  "description": "Compassion Course website with Firebase backend and Netlify hosting",
+  "main": "index.js",
+  "scripts": {
+    "build": "echo 'Static site - no build needed'",
+    "dev": "npx http-server public -p 3000 -o",
+    "firebase:emulator": "firebase emulators:start",
+    "deploy": "netlify deploy --prod",
+    "init-data": "node scripts/init-firebase-data.js"
+  },
+  "dependencies": {
+    "firebase": "^10.7.1"
+  },
+  "devDependencies": {
+    "firebase-tools": "^13.0.0",
+    "http-server": "^14.1.1",
+    "netlify-cli": "^17.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "compassion",
+    "course",
+    "firebase",
+    "netlify",
+    "cms",
+    "education",
+    "personal-development"
+  ],
+  "author": "Compassion Course Team",
+  "license": "MIT"
+}
