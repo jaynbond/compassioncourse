@@ -268,7 +268,7 @@ p {
 }
 
 .animated-text {
-    height: 80px;
+    height: 120px;
     overflow: hidden;
     margin: 2rem 0;
     display: flex;
@@ -279,7 +279,7 @@ p {
 }
 
 .animated-text-content {
-    font-size: 1.5rem;
+    font-size: 3rem;
     font-weight: 600;
     color: #fbbf24;
     text-align: center;
@@ -761,6 +761,14 @@ section {
     .hero-title {
         font-size: 2.5rem;
     }
+    
+    .animated-text-content {
+        font-size: 2rem;
+    }
+    
+    .animated-text {
+        height: 100px;
+    }
 
     .hero-buttons {
         flex-direction: column;
@@ -838,6 +846,14 @@ section {
     .hero-title {
         font-size: 2rem;
         line-height: 1.2;
+    }
+    
+    .animated-text-content {
+        font-size: 1.5rem;
+    }
+    
+    .animated-text {
+        height: 80px;
     }
 
     .container {
