@@ -9,6 +9,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize animated text
     initAnimatedText();
     
+    // Initialize hero slideshow
+    initHeroSlideshow();
+    
     // Mobile Navigation
     const hamburger = document.querySelector('.hamburger');
     const navMenu = document.querySelector('.nav-menu');
@@ -528,4 +531,26 @@ function initAnimatedText() {
     
     // Update text every 2 seconds
     setInterval(updateText, 2000);
+}
+
+// Hero slideshow functionality
+function initHeroSlideshow() {
+    const slides = document.querySelectorAll('.hero-slide');
+    if (slides.length === 0) return;
+    
+    let currentSlide = 0;
+    
+    function nextSlide() {
+        // Remove active class from current slide
+        slides[currentSlide].classList.remove('active');
+        
+        // Move to next slide
+        currentSlide = (currentSlide + 1) % slides.length;
+        
+        // Add active class to new slide
+        slides[currentSlide].classList.add('active');
+    }
+    
+    // Change slide every 4 seconds
+    setInterval(nextSlide, 4000);
 }
