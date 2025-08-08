@@ -634,7 +634,7 @@ function initTeamPhotoGrid() {
 
     teamPhotos.forEach((photo, index) => {
         const img = document.createElement('img');
-        img.src = `team/${photo}`;
+        img.src = `Team/${photo}`;
         img.alt = `Team Member ${index + 1}`;
         img.className = 'team-photo-main';
         img.dataset.photoIndex = index;
